@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const User = require("../models/userModels");
+const generateToken = require("../utils/genrateTokens");
 
-const LogIn = async (req, res) => {
+const registerUser = async (req, res) => {
   const { username, contact, city, PANNumber, aadharNumber, GSTCertificate } =
     req.body;
 
@@ -17,28 +18,42 @@ const LogIn = async (req, res) => {
   ) {
     res.status(400).send(" Please provide all required information");
   }
+  const userExists = await User.findOne({ where: { aadharNumber } });
+  if (userExists) {
+    res.status(400);
 
-  try {
-    const user = User.create({
-      username,
-      contact,
-      city,
-      PANNumber,
-      aadharNumber,
-      GSTCertificate,
-    });
-    res.status(201).json(user);
-  } catch (error) {
-    res.status(500).json(error.message);
+    throw new Error("user already exists");
+  }
+
+  const user = User.create({
+    username,
+    contact,
+    city,
+    PANNumber,
+    aadharNumber,
+    GSTCertificate,
+  });
+  if (user) {
+    generateToken(res, user._id);
+    res.status(201).json({ username: user.username, contact: user.contact });
+  } else {
+    res.status(400);
+    throw new Error("Invalid User data");
   }
 };
 
 const getUserProfile = async (req, res) => {
-  try {
-    const user = await User.findAll();
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json(error.message);
+  const user = await User.findById(req.user.id);
+
+  if (user) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      contact: user.contact,
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
   }
 };
 
@@ -60,4 +75,4 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { LogIn, getUserProfile, updateUserProfile };
+module.exports = { registerUser, getUserProfile, updateUserProfile };

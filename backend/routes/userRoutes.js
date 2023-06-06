@@ -1,13 +1,27 @@
 const router = require("express").Router();
 const User = require("../models/userModels");
+/* This line of code is importing three functions (`registerUser`, `getUserProfile`, and
+`updateUserProfile`) from the `../controllers/users` module and assigning them to constants with the
+same names using destructuring assignment. These functions are likely used in the routes defined in
+the router. */
+// const {
+//   registerUser,
+//   getUserProfile,
+//   updateUserProfile,
+// } = require("../controllers/users");
 const {
-  LogIn,
+  registerUser,
+  logoutUser,
   getUserProfile,
   updateUserProfile,
-} = require("../controllers/users");
+} = require("../controllers/userController");
+const { authenticateToken } = require("../middlewares/authMiddleware");
 
-router.post("/LogIn", LogIn);
-router.route("/profile").get(getUserProfile).put(updateUserProfile);
+router.post("/", registerUser);
+router
+  .route("/profile")
+  .get(authenticateToken, getUserProfile)
+  .put(authenticateToken, updateUserProfile);
 
 // router.route("/profile").get(getUserProfile).put(updateUserProfile);
 // router.post("/", async (req, res) => {

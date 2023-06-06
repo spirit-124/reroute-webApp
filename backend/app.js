@@ -9,7 +9,7 @@ const { notFound, errHandler } = require("./middlewares/errorMiddleware");
 
 const app = express();
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 5002;
 
 app.use(bodyParser.json());
 

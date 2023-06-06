@@ -1,8 +1,8 @@
-const router = require("express").Router();
 const User = require("../models/userModels");
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require("twilio")(accountSid, authToken);
+const generateToken = require("../utils/genrateTokens");
 
 // @desc getOTP for user
 // route PUT /api/v1/user/Authentication/GetOTP/:phoneNumber
@@ -48,4 +48,7 @@ const verifyOtp = async (req, res) => {
       }
       res.status(200).json({ msg: data.status, data });
     });
+  // generateToken(res, user._id);
 };
+
+module.exports = { getOtp, verifyOtp };

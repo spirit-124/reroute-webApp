@@ -4,6 +4,7 @@ const userRoute = require("./routes/userRoutes");
 const authRoute = require("./routes/authRoutes");
 const sequelize = require("./utils/db");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
 // const { notFound, errHandler } = require("./middlewares/errorMiddleware");
 const { notFound, errHandler } = require("./middlewares/errorMiddleware");
 

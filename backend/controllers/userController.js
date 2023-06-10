@@ -2,24 +2,8 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModels.js");
 const { generateToken } = require("../utils/genrateTokens.js");
 
-// @desc Auth user/set token
-// route POST /api/user/auth
-// @access public
-// const authUser = asyncHandler(async (req, res) => {
-//   const { email, password } = req.body;
-
-//   const user = await User.findOne({ email: email });
-//   if (user && (await user.matchpassword(password))) {
-//     generateToken(res, user._id);
-//     res.status(201).json({ _id: user._id, name: user.name, email: user.email });
-//   } else {
-//     res.status(401);
-//     throw new Error("Invalid email or password");
-//   }
-// });
-
 // @desc Register new user
-// route POST /api/user
+// route POST /api/v1/users
 // @access public
 const registerUser = asyncHandler(async (req, res) => {
   const { username, contact, city, PANNumber, aadharNumber, GSTCertificate } =
@@ -52,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 // @desc LogOut User
-// route POST /api/user/logout
+// route POST /api/v1/users/logout
 // @access public
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
@@ -66,15 +50,11 @@ const logoutUser = asyncHandler(async (req, res) => {
 });
 
 // @desc get User Profile
-// route GET /api/user/profile
+// route GET /api/v1/users/SignUp/profile
 // @access private
 const getUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne(req.user.id);
-  // const user = {
-  //   _id: user._id,
-  //   email: user.email,
-  //   name: user.name,
-  // };
+
   if (user) {
     res.json({
       id: user.id,
@@ -89,7 +69,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc Update User Profile
-// route PUT /api/user/profile
+// route PUT /api/v1/users/profile
 // @access private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findOne(req.user.id);
@@ -97,10 +77,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.username = req.body.username || user.username;
     user.city = req.body.city || user.city;
-
-    // if (req.body.password) {
-    //   user.password = req.body.password;
-    // }
 
     const updatedUser = await user.save();
     res.status(200).json({

@@ -5,7 +5,7 @@ const client = require("twilio")(accountSid, authToken);
 const generateToken = require("../utils/genrateTokens");
 
 // @desc getOTP for user
-// route PUT /api/v1/user/Authentication/GetOTP/:phoneNumber
+// route GET /api/v1/users/signUp/Authentication/GetOTP/:phoneNumber
 const getOtp = async (req, res) => {
   const phoneNumber = req.params.phoneNumber;
 
@@ -29,7 +29,7 @@ const getOtp = async (req, res) => {
 };
 
 // @desc VerifyOTP for user
-// route PUT /api/v1/user/Authentication/VerifyOTP
+// route POST /api/v1/users/signUp/Authentication/GetOTP/:phoneNumber
 const verifyOtp = async (req, res) => {
   const to = req.body.phoneNumber;
   const otp = req.body.otp;
